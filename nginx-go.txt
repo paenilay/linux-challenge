@@ -1,0 +1,34 @@
+Check dns setting in /etc/resolv.conf 
+- nameserver 8.8.8.8 
+
+Install and update nginx 
+- sudo yum update
+- sudo dnf install nginx -y 
+- sudo systemctl enable nginx 
+- sudo systemctl start nginx 
+
+Install firewalld 
+- sudo dnf install firewalld -y 
+- sudo systemctl enable firewalld 
+- sudo systemctl start firewalld 
+
+Open the required ports 
+- sudo firewall-cmd --add-port=22/tcp --permanent 
+- sudo firewall-cmd --add-port=80/tcp --permanent 
+- sudo firewall-cmd --add-port=8081/tcp --permanent 
+- sudo firewall-cmd --add-service=http --permanent 
+- sudo systemctl reload firewalld 
+- sudo firewall-cmd --list-all (check port and services are already added)
+
+Run Go Application 
+- pushd go-dir 
+- nohup go run main.go & 
+- ps -ef | grep go (check the service is already running)
+
+Reverse Proxy (/etc/nginx/nginx.conf)
+- inside the "server" block, find "location \", add below line 
+    - proxy_pass http://localhost:8081;
+- sudo nginx -t (check syntax)
+- sudo nginx -s reload 
+-curl -u test:test http://localhost:80 
+
